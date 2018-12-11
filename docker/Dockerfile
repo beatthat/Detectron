@@ -9,6 +9,7 @@ ENV LD_LIBRARY_PATH /usr/local/caffe2_build/lib:${LD_LIBRARY_PATH}
 
 # Clone the Detectron repository
 RUN git clone https://github.com/facebookresearch/detectron /detectron
+RUN cd /detectron && git checkout d56e267
 
 # Install Python dependencies
 RUN pip install -r /detectron/requirements.txt
@@ -26,3 +27,4 @@ RUN make
 
 # [Optional] Build custom ops
 RUN make ops
+
