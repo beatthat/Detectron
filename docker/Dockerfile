@@ -28,3 +28,8 @@ RUN make
 # [Optional] Build custom ops
 RUN make ops
 
+COPY bin bin
+
+ENV PATH="${PATH}:/detectron/bin"
+
+CMD [ "bin/bash" ]
