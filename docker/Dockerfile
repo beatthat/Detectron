@@ -8,8 +8,8 @@ ENV PYTHONPATH /usr/local/caffe2_build:${PYTHONPATH}
 ENV LD_LIBRARY_PATH /usr/local/caffe2_build/lib:${LD_LIBRARY_PATH}
 
 # Clone the Detectron repository
-RUN git clone https://github.com/facebookresearch/detectron /detectron
-RUN cd /detectron && git checkout d56e267
+RUN git clone https://github.com/beatthat/detectron /detectron
+RUN cd /detectron && git checkout docker-working
 
 # Install Python dependencies
 RUN pip install -r /detectron/requirements.txt

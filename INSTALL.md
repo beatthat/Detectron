@@ -22,11 +22,11 @@ Please ensure that your Caffe2 installation was successful before proceeding by 
 
 ```
 # To check if Caffe2 build was successful
-python -c 'from caffe2.python import core' 2>/dev/null && echo "Success" || echo "Failure"
+python2 -c 'from caffe2.python import core' 2>/dev/null && echo "Success" || echo "Failure"
 
 # To check if Caffe2 GPU build was successful
 # This must print a number > 0 in order to use Detectron
-python -c 'from caffe2.python import workspace; print(workspace.NumCudaDevices())'
+python2 -c 'from caffe2.python import workspace; print(workspace.NumCudaDevices())'
 ```
 
 If the `caffe2` Python package is not found, you likely need to adjust your `PYTHONPATH` environment variable to include its location (`/path/to/caffe2/build`, where `build` is the Caffe2 CMake build directory).
@@ -43,7 +43,7 @@ cd $COCOAPI/PythonAPI
 make install
 # Alternatively, if you do not have permissions or prefer
 # not to install the COCO API into global site-packages
-python setup.py install --user
+python2 setup.py install --user
 ```
 
 Note that instructions like `# COCOAPI=/path/to/install/cocoapi` indicate that you should pick a path where you'd like to have the software cloned and then set an environment variable (`COCOAPI` in this case) accordingly.
@@ -69,10 +69,10 @@ Set up Python modules:
 cd $DETECTRON && make
 ```
 
-Check that Detectron tests pass (e.g. for [`SpatialNarrowAsOp test`](detectron/tests/test_spatial_narrow_as_op.py)):
+Check that Detectron tests pass (e.g. for [`SpatialNarrowAsOp test`](tests/test_spatial_narrow_as_op.py)):
 
 ```
-python $DETECTRON/detectron/tests/test_spatial_narrow_as_op.py
+python2 $DETECTRON/detectron/tests/test_spatial_narrow_as_op.py
 ```
 
 ## That's All You Need for Inference
@@ -101,7 +101,7 @@ cd $DETECTRON && make ops
 Check that the custom operator tests pass:
 
 ```
-python $DETECTRON/detectron/tests/test_zero_even_op.py
+python2 $DETECTRON/detectron/tests/test_zero_even_op.py
 ```
 
 ## Docker Image
@@ -115,10 +115,10 @@ cd $DETECTRON/docker
 docker build -t detectron:c2-cuda9-cudnn7 .
 ```
 
-Run the image (e.g. for [`BatchPermutationOp test`](detectron/tests/test_batch_permutation_op.py)):
+Run the image (e.g. for [`BatchPermutationOp test`](tests/test_batch_permutation_op.py)):
 
 ```
-nvidia-docker run --rm -it detectron:c2-cuda9-cudnn7 python detectron/tests/test_batch_permutation_op.py
+nvidia-docker run --rm -it detectron:c2-cuda9-cudnn7 python2 detectron/tests/test_batch_permutation_op.py
 ```
 
 ## Troubleshooting
@@ -129,7 +129,7 @@ In case of Caffe2 installation problems, please read the troubleshooting section
 
 Caffe2 comes with performance [`profiling`](https://github.com/caffe2/caffe2/tree/master/caffe2/contrib/prof)
 support which you may find useful for benchmarking or debugging your operators
-(see [`BatchPermutationOp test`](detectron/tests/test_batch_permutation_op.py) for example usage).
+(see [`BatchPermutationOp test`](tests/test_batch_permutation_op.py) for example usage).
 Profiling support is not built by default and you can enable it by setting
 the `-DUSE_PROF=ON` flag when running Caffe2 CMake.
 
@@ -200,8 +200,8 @@ library and include dir by using:
 ```
 cmake .. \
   # insert your Caffe2 CMake flags here
-  -DPYTHON_LIBRARY=$(python -c "from distutils import sysconfig; print(sysconfig.get_python_lib())") \
-  -DPYTHON_INCLUDE_DIR=$(python -c "from distutils import sysconfig; print(sysconfig.get_python_inc())")
+  -DPYTHON_LIBRARY=$(python2 -c "from distutils import sysconfig; print(sysconfig.get_python_lib())") \
+  -DPYTHON_INCLUDE_DIR=$(python2 -c "from distutils import sysconfig; print(sysconfig.get_python_inc())")
 ```
 
 ### Caffe2 with NNPACK Build

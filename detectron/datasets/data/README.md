@@ -51,8 +51,7 @@ VOC<year>
 |  |_ ...
 |  |_ <im-N-name>.jpg
 |_ annotations
-|  |_ voc_<year>_train.json
-|  |_ voc_<year>_val.json
+|  |_ voc_<year>_trainval.json
 |  |_ ...
 |_ VOCdevkit<year>
 ```

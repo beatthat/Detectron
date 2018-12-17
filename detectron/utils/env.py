@@ -22,12 +22,9 @@ from __future__ import unicode_literals
 
 import os
 import sys
-import yaml
 
 # Default value of the CMake install prefix
 _CMAKE_INSTALL_PREFIX = '/usr/local'
-# Detectron ops lib
-_DETECTRON_OPS_LIB = 'libcaffe2_detectron_ops_gpu.so'
 
 
 def get_runtime_dir():
@@ -61,18 +58,19 @@ def import_nccl_ops():
 
 def get_detectron_ops_lib():
     """Retrieve Detectron ops library."""
-    # Candidate prefixes for detectron ops lib path
+    # Candidate prefixes for the detectron ops lib path
     prefixes = [_CMAKE_INSTALL_PREFIX, sys.prefix, sys.exec_prefix] + sys.path
-    # Candidate subdirs for detectron ops lib
-    subdirs = ['lib', 'torch/lib']
-    # Try to find detectron ops lib
+    # Search for detectron ops lib
     for prefix in prefixes:
-        for subdir in subdirs:
-            ops_path = os.path.join(prefix, subdir, _DETECTRON_OPS_LIB)
-            if os.path.exists(ops_path):
-                print('Found Detectron ops lib: {}'.format(ops_path))
-                return ops_path
-    raise Exception('Detectron ops lib not found')
+        ops_path = os.path.join(prefix, 'lib/libcaffe2_detectron_ops_gpu.so')
+        if os.path.exists(ops_path):
+            # TODO(ilijar): Switch to using a logger
+            print('Found Detectron ops lib: {}'.format(ops_path))
+            break
+    assert os.path.exists(ops_path), \
+        ('Detectron ops lib not found; make sure that your Caffe2 '
+         'version includes Detectron module')
+    return ops_path
 
 
 def get_custom_ops_lib():
@@ -84,8 +82,3 @@ def get_custom_ops_lib():
     assert os.path.exists(custom_ops_lib), \
         'Custom ops lib not found at \'{}\''.format(custom_ops_lib)
     return custom_ops_lib
-
-
-# YAML load/dump function aliases
-yaml_load = yaml.load
-yaml_dump = yaml.dump

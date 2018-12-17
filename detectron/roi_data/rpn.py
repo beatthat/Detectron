@@ -89,6 +89,12 @@ def add_rpn_blobs(blobs, im_scales, roidb):
             (entry['gt_classes'] > 0) & (entry['is_crowd'] == 0)
         )[0]
         gt_rois = entry['boxes'][gt_inds, :] * scale
+        # TODO(rbg): gt_boxes is poorly named;
+        # should be something like 'gt_rois_info'
+        gt_boxes = blob_utils.zeros((len(gt_inds), 6))
+        gt_boxes[:, 0] = im_i  # batch inds
+        gt_boxes[:, 1:5] = gt_rois
+        gt_boxes[:, 5] = entry['gt_classes'][gt_inds]
         im_info = np.array([[im_height, im_width, scale]], dtype=np.float32)
         blobs['im_info'].append(im_info)
 
@@ -202,10 +208,7 @@ def _get_rpn_blobs(im_height, im_width, foas, all_anchors, gt_boxes):
     bg_inds = np.where(anchor_to_gt_max < cfg.TRAIN.RPN_NEGATIVE_OVERLAP)[0]
     if len(bg_inds) > num_bg:
         enable_inds = bg_inds[npr.randint(len(bg_inds), size=num_bg)]
-    else:
-        enable_inds = bg_inds
-
-    labels[enable_inds] = 0
+        labels[enable_inds] = 0
     bg_inds = np.where(labels == 0)[0]
 
     bbox_targets = np.zeros((num_inside, 4), dtype=np.float32)

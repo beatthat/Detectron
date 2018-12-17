@@ -44,11 +44,11 @@ from collections import deque
 from collections import OrderedDict
 import logging
 import numpy as np
+import Queue
 import signal
 import threading
 import time
 import uuid
-from six.moves import queue as Queue
 
 from caffe2.python import core, workspace
 
@@ -143,15 +143,13 @@ class RoIDataLoader(object):
             vert = np.logical_not(horz)
             horz_inds = np.where(horz)[0]
             vert_inds = np.where(vert)[0]
-
-            horz_inds = np.random.permutation(horz_inds)
-            vert_inds = np.random.permutation(vert_inds)
-            mb = cfg.TRAIN.IMS_PER_BATCH
-            horz_inds = horz_inds[:(len(horz_inds) // mb) * mb]
-            vert_inds = vert_inds[:(len(vert_inds) // mb) * mb]
-            inds = np.hstack((horz_inds, vert_inds))
-
-            inds = np.reshape(inds, (-1, mb))
+            inds = np.hstack(
+                (
+                    np.random.permutation(horz_inds),
+                    np.random.permutation(vert_inds)
+                )
+            )
+            inds = np.reshape(inds, (-1, 2))
             row_perm = np.random.permutation(np.arange(inds.shape[0]))
             inds = np.reshape(inds[row_perm, :], (-1, ))
             self._perm = inds
@@ -224,7 +222,6 @@ class RoIDataLoader(object):
 
     def start(self, prefill=False):
         for w in self._workers + self._enqueuers:
-            w.setDaemon(True)
             w.start()
         if prefill:
             logger.info('Pre-filling mini-batch queue...')
@@ -240,9 +237,6 @@ class RoIDataLoader(object):
                 if self.coordinator.should_stop():
                     self.shutdown()
                     break
-
-    def has_stopped(self):
-        return self.coordinator.should_stop()
 
     def shutdown(self):
         self.coordinator.request_stop()
