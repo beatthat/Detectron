@@ -2,9 +2,12 @@
 
 DIR=$(dirname "${BASH_SOURCE[0]}")  # get the directory name
 DIR=$(realpath "${DIR}")    # resolve its full path if need be
-DETECTRON_DIR=$(dirname ${DIR})
+DETECTRON_DEFAULT=$(dirname ${DIR})
 IMAGE_DIR=$1
 OUTPUT_DIR=$2
+DETECTRON_DIR=${3:-$DETECTRON_DEFAULT}
+
+echo "run_detect_on_images - DETECTRON_DIR=${DETECTRON_DIR}"
 
 CONFIG=configs/12_2017_baselines/e2e_mask_rcnn_R-101-FPN_2x.yaml
 IMG_EXT=jpg

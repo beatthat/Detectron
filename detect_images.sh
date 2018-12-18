@@ -7,4 +7,4 @@ docker run \
     --runtime=nvidia \
     -p 8888:8888 \
     --mount type=bind,src=${HOST_MOUNT},target=/docker_host \
-    detectron run_detect_on_images /docker_host/data/images /docker_host/data/out
+    detectron run_detect_on_images /docker_host/data/images /docker_host/data/out /docker_host

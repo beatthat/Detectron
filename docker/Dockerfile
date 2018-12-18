@@ -8,7 +8,7 @@ ENV PYTHONPATH /usr/local/caffe2_build:${PYTHONPATH}
 ENV LD_LIBRARY_PATH /usr/local/caffe2_build/lib:${LD_LIBRARY_PATH}
 
 # Clone the Detectron repository
-RUN git clone https://github.com/beatthat/detectron /detectron
+RUN git clone https://github.com/beatthat/Detectron /detectron
 RUN cd /detectron && git checkout docker-working
 
 # Install Python dependencies
@@ -30,6 +30,13 @@ RUN make ops
 
 COPY bin bin
 
-ENV PATH="${PATH}:/detectron/bin"
+# /detectron/bin has scripts intended to execute with docker,
+# e.g. docker run ... bin/run_detect_on_images.
+#
+# /docker_host/bin is the same as /detectron/bin
+# but /docker_host is expected to be a mounted directory
+# from the host machine that's running docker. 
+# This makes is easier to test changes without publishing to git.
+ENV PATH="/docker_host/docker/bin:${PATH}:/detectron/bin"
 
 CMD [ "bin/bash" ]
