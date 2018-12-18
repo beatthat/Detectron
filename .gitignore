@@ -25,3 +25,4 @@ detectron/utils/cython_*.c
 
 data
 
+.ipynb_checkpoints
