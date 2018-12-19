@@ -38,5 +38,6 @@ COPY bin bin
 # from the host machine that's running docker. 
 # This makes is easier to test changes without publishing to git.
 ENV PATH="/docker_host/docker/bin:${PATH}:/detectron/bin"
+ENV PYTHONPATH="${PYTHONPATH}:/docker_host"
 
 CMD [ "bin/bash" ]

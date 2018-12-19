@@ -45,6 +45,9 @@ import detectron.core.test_engine as infer_engine
 import detectron.datasets.dummy_datasets as dummy_datasets
 import detectron.utils.c2 as c2_utils
 import detectron.utils.vis as vis_utils
+import sys
+
+from utils.frame_generators import video2frames
 
 c2_utils.import_detectron_ops()
 
@@ -104,14 +107,11 @@ def main(args):
     if os.path.isdir(args.im_or_folder):
         im_list = glob.iglob(args.im_or_folder + '/*.' + args.image_ext)
     else:
-        im_list = [args.im_or_folder]
+        im_list = video2frames(args.im_or_folder)
 
-    for i, im_name in enumerate(im_list):
-        out_name = os.path.join(
-            args.output_dir, '{}'.format(os.path.basename(im_name) + '.pdf')
-        )
-        logger.info('Processing {} -> {}'.format(im_name, out_name))
-        im = cv2.imread(im_name)
+    for i, im in enumerate(im_list):
+        
+        logger.info('Processing frame {}'.format(i))
         timers = defaultdict(Timer)
         t = time.time()
         with c2_utils.NamedCudaScope(0):
@@ -129,7 +129,7 @@ def main(args):
 
         vis_utils.vis_one_image(
             im[:, :, ::-1],  # BGR -> RGB for visualization
-            im_name,
+            'frame {}'.format(i),
             args.output_dir,
             cls_boxes,
             cls_segms,

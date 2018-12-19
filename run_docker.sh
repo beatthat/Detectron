@@ -6,5 +6,5 @@ docker run \
     -it \
     --runtime=nvidia \
     -p 8888:8888 \
-    --mount type=bind,src=${HOST_MOUNT},target=/docker_host \
-    detectron bash 
+    -v ${HOST_MOUNT}:/docker_host \
+    detectron run_jupyter.sh /docker_host 
