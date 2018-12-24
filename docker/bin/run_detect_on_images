@@ -21,4 +21,7 @@ python ${DETECTRON_DIR}/tools/infer_boxes_and_keypoints.py \
     --output-dir ${OUTPUT_DIR} \
     --image-ext ${IMG_EXT} \
     --wts ${WTS} \
+    --frame-start 1000 \
+    --frame-stride 20 \
+    --frame-count 10 \
     ${IMAGE_DIR}

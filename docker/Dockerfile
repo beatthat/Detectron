@@ -40,4 +40,6 @@ COPY bin bin
 ENV PATH="/docker_host/docker/bin:${PATH}:/detectron/bin"
 ENV PYTHONPATH="${PYTHONPATH}:/docker_host"
 
+RUN python ./bin/cache_weights.py
+
 CMD [ "bin/bash" ]

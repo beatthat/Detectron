@@ -7,4 +7,4 @@ docker run \
     --runtime=nvidia \
     -p 8888:8888 \
     -v ${HOST_MOUNT}:/docker_host \
-    detectron run_detect_on_images /docker_host/data/video/video_0.avi /docker_host/data/out /docker_host
+    detectron run_detect_on_images /docker_host/data/video/dance_01.mp4 /docker_host/data/out /docker_host

@@ -89,6 +89,28 @@ def parse_args():
     parser.add_argument(
         'im_or_folder', help='image or folder of images', default=None
     )
+    parser.add_argument(
+        '--frame-start',
+        dest='frame_start',
+        help='when input is a video, start on this frame',
+        default='0',
+        type=int
+    )
+    parser.add_argument(
+        '--frame-stride',
+        dest='frame_stride',
+        help='when input is a video, use every Nth frame. Default is 1',
+        default='1',
+        type=int
+    )
+    parser.add_argument(
+        '--frame-count',
+        dest='frame_count',
+        help='when input is a video, use every Nth frame. Default is None',
+        type=int
+    )
+
+
     if len(sys.argv) == 1:
         parser.print_help()
         sys.exit(1)
@@ -107,7 +129,12 @@ def main(args):
     if os.path.isdir(args.im_or_folder):
         im_list = glob.iglob(args.im_or_folder + '/*.' + args.image_ext)
     else:
-        im_list = video2frames(args.im_or_folder)
+        im_list = video2frames(
+            args.im_or_folder, 
+            frame_start=args.frame_start,
+            frame_stride=args.frame_stride,
+            frame_count=args.frame_count
+            )
 
     for i, im in enumerate(im_list):
         
