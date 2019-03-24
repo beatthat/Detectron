@@ -1,8 +1,7 @@
-numpy>=1.13
-pyyaml>=3.12
-matplotlib
-opencv-python>=3.2
+numpy==1.13
+pyyaml==3.12
+matplotlib==2.1.1
+opencv-python==4.0.0.21
 setuptools
-Cython
-mock
-scipy
+Cython==0.29.6
+scipy==0.19.1
